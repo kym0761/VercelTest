@@ -1,0 +1,72 @@
+@page "/calculator"
+
+<PageTitle>Calculator</PageTitle>
+
+<h1>계산기</h1>
+
+<div class="calc-card">
+    <div class="calc-row">
+        <input type="number" class="form-control" @bind="A" @bind:event="oninput" placeholder="첫 번째 숫자" />
+        <select class="form-select calc-op" @bind="Operator">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">×</option>
+            <option value="/">÷</option>
+        </select>
+        <input type="number" class="form-control" @bind="B" @bind:event="oninput" placeholder="두 번째 숫자" />
+    </div>
+
+    <button class="btn btn-primary calc-btn" @onclick="Calculate">계산하기</button>
+
+    @if (ErrorMessage is not null)
+    {
+        <p class="calc-error">@ErrorMessage</p>
+    }
+    else if (Result is not null)
+    {
+        <p class="calc-result">결과: @Result</p>
+    }
+</div>
+
+@code {
+    private double? A;
+    private double? B;
+    private string Operator = "+";
+    private double? Result;
+    private string? ErrorMessage;
+
+    private void Calculate()
+    {
+        ErrorMessage = null;
+        Result = null;
+
+        if (A is null || B is null)
+        {
+            ErrorMessage = "두 숫자를 모두 입력해주세요.";
+            return;
+        }
+
+        switch (Operator)
+        {
+            case "+":
+                Result = A + B;
+                break;
+            case "-":
+                Result = A - B;
+                break;
+            case "*":
+                Result = A * B;
+                break;
+            case "/":
+                if (B == 0)
+                {
+                    ErrorMessage = "0으로 나눌 수 없습니다.";
+                }
+                else
+                {
+                    Result = A / B;
+                }
+                break;
+        }
+    }
+}
